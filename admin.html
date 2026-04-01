@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Forms Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#0f1117; --s:#181b26; --s2:#1e2130; --s3:#232638;
+  --bd:rgba(255,255,255,0.08); --bd2:rgba(255,255,255,0.14);
+  --ac:#4f7cff; --ac2:#7c5cff; --ag:rgba(79,124,255,0.12);
+  --t:#e8eaf0; --t2:#8890a4; --t3:#4a5068;
+  --ok:#20c997; --warn:#ffa94d; --err:#ff4d6d;
+  --r:12px; --font:'Plus Jakarta Sans',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:var(--font);background:var(--bg);color:var(--t);min-height:100vh;}
+
+/* ── LOGIN ── */
+#login-screen{
+  min-height:100vh; display:flex;
+  align-items:center; justify-content:center; padding:20px;
+  background:radial-gradient(ellipse at 50% 0%,rgba(79,124,255,0.14),transparent 65%);
+}
+.lcard{
+  background:var(--s); border:1px solid var(--bd2);
+  border-radius:18px; padding:40px; width:100%; max-width:380px;
+  box-shadow:0 24px 80px rgba(0,0,0,0.55);
+}
+.llogo{text-align:center;margin-bottom:28px;}
+.lico{
+  width:60px; height:60px;
+  background:linear-gradient(135deg,var(--ac),var(--ac2));
+  border-radius:16px; display:flex;
+  align-items:center; justify-content:center;
+  font-size:28px; margin:0 auto 14px;
+}
+.ltitle{font-size:20px;font-weight:700;margin-bottom:4px;}
+.lsub{font-size:13px;color:var(--t2);}
+.field{margin-bottom:14px;}
+.field label{
+  display:block; font-size:12px; font-weight:600;
+  color:var(--t2); text-transform:uppercase;
+  letter-spacing:.8px; margin-bottom:7px;
+}
+.field input{
+  width:100%; background:var(--s2); border:1px solid var(--bd2);
+  border-radius:var(--r); padding:12px 14px;
+  font-family:var(--font); font-size:14px; color:var(--t); outline:none;
+  transition:border-color .2s;
+}
+.field input:focus{border-color:var(--ac);box-shadow:0 0 0 3px var(--ag);}
+.field input::placeholder{color:var(--t3);}
+.lerr{font-size:13px;color:var(--err);min-height:18px;margin-bottom:10px;text-align:center;}
+.btn-full{
+  width:100%; padding:13px;
+  background:linear-gradient(135deg,var(--ac),var(--ac2));
+  color:#fff; border:none; border-radius:var(--r);
+  font-family:var(--font); font-size:14px; font-weight:600;
+  cursor:pointer; transition:all .2s;
+}
+.btn-full:hover{opacity:.9;transform:translateY(-1px);}
+.btn-full:disabled{opacity:.5;cursor:not-allowed;transform:none;}
+
+/* ── ADMIN SCREEN ── */
+#admin-screen{display:none;}
+
+/* TOPBAR */
+.topbar{
+  background:var(--s); border-bottom:1px solid var(--bd);
+  padding:0 22px; height:58px;
+  display:flex; align-items:center; justify-content:space-between;
+  position:sticky; top:0; z-index:100;
+}
+.tb-left{display:flex;align-items:center;gap:10px;}
+.tb-icon{
+  width:32px; height:32px;
+  background:linear-gradient(135deg,var(--ac),var(--ac2));
+  border-radius:8px; display:flex; align-items:center;
+  justify-content:center; font-size:15px;
+}
+.tb-title{font-size:14px;font-weight:600;}
+.tb-badge{
+  font-size:11px; background:rgba(255,77,109,0.15);
+  color:var(--err); border:1px solid rgba(255,77,109,0.28);
+  padding:3px 9px; border-radius:20px; font-weight:500;
+}
+.tb-right{display:flex;align-items:center;gap:10px;}
+.user-chip{
+  font-size:12px; color:var(--t2);
+  background:var(--s2); border:1px solid var(--bd);
+  padding:5px 10px; border-radius:8px;
+}
+.btn{
+  font-family:var(--font); font-size:13px; font-weight:500;
+  padding:7px 14px; border-radius:8px; cursor:pointer;
+  border:none; transition:all .18s; display:flex; align-items:center; gap:5px;
+}
+.btn-ghost{background:transparent;color:var(--t2);border:1px solid var(--bd2);}
+.btn-ghost:hover{background:var(--s2);color:var(--t);}
+.btn-ok{background:var(--ok);color:#0a2a1e;}
+.btn-ok:hover{opacity:.88;}
+.btn-ok:disabled{opacity:.45;cursor:not-allowed;}
+.btn-err{background:transparent;color:var(--err);border:1px solid rgba(255,77,109,.28);}
+.btn-err:hover{background:rgba(255,77,109,.1);}
+.btn-ac{background:var(--ac);color:#fff;}
+.btn-ac:hover{background:#3d6bec;}
+
+/* BODY LAYOUT */
+.admin-body{
+  max-width:1200px; margin:0 auto; padding:28px 22px 80px;
+  display:grid; grid-template-columns:280px 1fr; gap:22px;
+}
+
+/* SIDEBAR */
+.sidebar{
+  background:var(--s); border:1px solid var(--bd);
+  border-radius:var(--r); padding:20px; height:fit-content;
+  position:sticky; top:78px;
+}
+.sb-label{
+  font-size:11px; font-weight:600; color:var(--t3);
+  text-transform:uppercase; letter-spacing:1px; margin-bottom:14px;
+}
+.sb-field{margin-bottom:14px;}
+.sb-field label{
+  display:block; font-size:12px; color:var(--t2);
+  font-weight:500; margin-bottom:6px;
+}
+.sb-field input{
+  width:100%; background:var(--s2); border:1px solid var(--bd2);
+  border-radius:9px; padding:10px 12px;
+  font-family:var(--font); font-size:13px; color:var(--t); outline:none;
+  transition:border-color .2s;
+}
+.sb-field input:focus{border-color:var(--ac);}
+.sb-field input::placeholder{color:var(--t3);}
+.sb-divider{border:none;border-top:1px solid var(--bd);margin:16px 0;}
+.sb-stat{
+  display:flex; justify-content:space-between; align-items:center;
+  font-size:13px; margin-bottom:10px;
+}
+.sb-stat-val{
+  font-weight:600; font-size:14px;
+  font-variant-numeric:tabular-nums;
+}
+.pill-green{color:var(--ok);}
+.pill-warn{color:var(--warn);}
+.pill-ac{color:var(--ac);}
+.save-note{
+  font-size:11px; color:var(--t3); text-align:center;
+  margin-top:10px; line-height:1.5;
+}
+
+/* FORMS TABLE */
+.main-panel{display:flex;flex-direction:column;gap:10px;}
+
+.panel-head{
+  background:var(--s); border:1px solid var(--bd);
+  border-radius:var(--r); padding:14px 18px;
+  display:flex; align-items:center; justify-content:space-between;
+}
+.ph-title{font-size:14px;font-weight:600;}
+.ph-right{display:flex;gap:8px;align-items:center;}
+
+.form-row{
+  background:var(--s); border:1px solid var(--bd);
+  border-radius:var(--r); padding:16px 18px;
+  display:grid; grid-template-columns:48px 1fr 1fr 100px 80px;
+  gap:12px; align-items:center;
+  transition:border-color .2s; animation:rin .3s ease both;
+}
+.form-row:hover{border-color:var(--bd2);}
+@keyframes rin{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+.row-num{
+  width:36px; height:36px; border-radius:9px;
+  background:var(--s2); display:flex; align-items:center;
+  justify-content:center; font-size:12px; font-weight:600;
+  color:var(--t3); font-variant-numeric:tabular-nums; flex-shrink:0;
+}
+.row-icon-pick{
+  width:36px; height:36px; border-radius:9px;
+  background:var(--s3); border:1px solid var(--bd2);
+  display:flex; align-items:center; justify-content:center;
+  font-size:18px; cursor:pointer; transition:background .15s;
+  flex-shrink:0;
+}
+.row-icon-pick:hover{background:var(--s2);}
+
+.row-name-col{display:flex;flex-direction:column;gap:6px;}
+.row-label{font-size:11px;color:var(--t3);font-weight:500;letter-spacing:.5px;}
+
+.row-input{
+  width:100%; background:var(--s2); border:1px solid var(--bd);
+  border-radius:8px; padding:8px 11px;
+  font-family:var(--font); font-size:13px; color:var(--t); outline:none;
+  transition:border-color .18s;
+}
+.row-input:focus{border-color:var(--ac);box-shadow:0 0 0 2px var(--ag);}
+.row-input::placeholder{color:var(--t3);}
+.row-input.url-inp{font-size:12px;}
+
+.row-status{
+  display:flex; align-items:center; justify-content:center;
+}
+.status-dot{
+  width:8px; height:8px; border-radius:50%;
+  margin-right:6px; flex-shrink:0;
+}
+.status-label{font-size:12px;font-weight:500;}
+.s-ok{color:var(--ok);}
+.s-ok .status-dot{background:var(--ok);}
+.s-warn{color:var(--warn);}
+.s-warn .status-dot{background:var(--warn);}
+
+.row-actions{display:flex;gap:6px;justify-content:flex-end;}
+.row-btn{
+  width:30px; height:30px; border-radius:7px;
+  background:var(--s2); border:1px solid var(--bd);
+  color:var(--t2); cursor:pointer; display:flex;
+  align-items:center; justify-content:center; font-size:14px;
+  transition:all .15s;
+}
+.row-btn:hover{background:var(--s3);color:var(--t);}
+.row-btn.del:hover{background:rgba(255,77,109,.1);color:var(--err);border-color:rgba(255,77,109,.3);}
+
+/* ICON PICKER POPOVER */
+.icon-pop{
+  position:fixed; background:var(--s);
+  border:1px solid var(--bd2); border-radius:12px;
+  padding:14px; z-index:300;
+  box-shadow:0 12px 40px rgba(0,0,0,0.5);
+  display:none; width:280px;
+}
+.icon-pop.show{display:block;}
+.icon-pop-grid{
+  display:grid; grid-template-columns:repeat(8,1fr); gap:4px;
+}
+.ip-opt{
+  width:30px; height:30px; border-radius:7px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:16px; cursor:pointer; transition:background .12s;
+}
+.ip-opt:hover{background:var(--s3);}
+
+/* TOAST */
+.toast{
+  position:fixed; bottom:24px; right:24px;
+  background:var(--s); border:1px solid var(--bd2);
+  border-radius:10px; padding:12px 18px;
+  font-size:13px; color:var(--t); z-index:9999;
+  transform:translateY(80px); opacity:0;
+  transition:all .3s cubic-bezier(.4,0,.2,1);
+  display:flex; align-items:center; gap:8px;
+  box-shadow:0 8px 32px rgba(0,0,0,.4); min-width:200px;
+}
+.toast.show{transform:translateY(0);opacity:1;}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .admin-body{grid-template-columns:1fr;}
+  .sidebar{position:static;}
+}
+@media(max-width:600px){
+  .form-row{grid-template-columns:36px 1fr; grid-template-rows:auto auto auto;}
+  .row-status,.row-actions{grid-column:span 2;}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ LOGIN SCREEN ══ -->
+<div id="login-screen">
+  <div class="lcard">
+    <div class="llogo">
+      <div class="lico">🔐</div>
+      <div class="ltitle">Admin Login</div>
+      <div class="lsub">Forms Dashboard</div>
+    </div>
+    <div class="field">
+      <label>Email</label>
+      <input type="email" id="lemail" placeholder="admin@example.com" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <div class="field">
+      <label>Password</label>
+      <input type="password" id="lpass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <div class="lerr" id="lerr"></div>
+    <button class="btn-full" id="lbtn" onclick="doLogin()">🔓 Login</button>
+  </div>
+</div>
+
+<!-- ══ ADMIN SCREEN ══ -->
+<div id="admin-screen">
+
+  <nav class="topbar">
+    <div class="tb-left">
+      <div class="tb-icon">⚙️</div>
+      <span class="tb-title">Admin Panel</span>
+      <span class="tb-badge">🔒 Admin Only</span>
+    </div>
+    <div class="tb-right">
+      <span class="user-chip" id="user-email"></span>
+      <a href="index.html" class="btn btn-ghost" style="text-decoration:none;">👁 Preview</a>
+      <button class="btn btn-ok" id="save-btn" onclick="saveAll()">💾 Save All</button>
+      <button class="btn btn-err" onclick="doLogout()">Logout</button>
+    </div>
+  </nav>
+
+  <div class="admin-body">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sb-label">App Settings</div>
+      <div class="sb-field">
+        <label>Portal Title</label>
+        <input type="text" id="app-title" placeholder="Forms Portal" oninput="dirtify()">
+      </div>
+      <div class="sb-field">
+        <label>Subtitle</label>
+        <input type="text" id="app-sub" placeholder="Choose a form below" oninput="dirtify()">
+      </div>
+
+      <hr class="sb-divider">
+      <div class="sb-label">Statistics</div>
+      <div class="sb-stat">
+        <span>Total Forms</span>
+        <span class="sb-stat-val pill-ac" id="st-total">0</span>
+      </div>
+      <div class="sb-stat">
+        <span>With Links</span>
+        <span class="sb-stat-val pill-green" id="st-linked">0</span>
+      </div>
+      <div class="sb-stat">
+        <span>Without Links</span>
+        <span class="sb-stat-val pill-warn" id="st-empty">0</span>
+      </div>
+
+      <hr class="sb-divider">
+      <button class="btn btn-ac" style="width:100%;justify-content:center;" onclick="addForm()">＋ Add Form</button>
+      <div class="save-note" id="dirty-note">All changes saved ✓</div>
+    </aside>
+
+    <!-- MAIN PANEL -->
+    <section class="main-panel">
+      <div class="panel-head">
+        <span class="ph-title">📋 Form Links Manager</span>
+        <div class="ph-right">
+          <button class="btn btn-ghost" onclick="resetAll()">🗑 Reset All</button>
+        </div>
+      </div>
+      <div id="rows-wrap"></div>
+    </section>
+
+  </div>
+</div>
+
+<!-- ICON PICKER -->
+<div class="icon-pop" id="icon-pop">
+  <div class="icon-pop-grid" id="icon-pop-grid"></div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- Firebase -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, onSnapshot }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+// ╔══════════════════════════════════════════════╗
+// ║  🔥 STEP 3: खाली Firebase config paste करा  ║
+// ╚══════════════════════════════════════════════╝
+const firebaseConfig = {
+  apiKey: "AIzaSyD8YC_R48xdtZe0ycrWISRSh-Rn_7kNv7E",
+  authDomain: "icds-efeba.firebaseapp.com",
+  projectId: "icds-efeba",
+  storageBucket: "icds-efeba.firebasestorage.app",
+  messagingSenderId: "404150914787",
+  appId: "1:404150914787:web:47d6e5376f6928b7c37fd6"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+// AUTH
+onAuthStateChanged(auth, user => {
+  if (user) {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('admin-screen').style.display = 'block';
+    document.getElementById('user-email').textContent = '👤 ' + user.email;
+    loadData();
+  } else {
+    document.getElementById('login-screen').style.display = 'flex';
+    document.getElementById('admin-screen').style.display = 'none';
+  }
+});
+
+window.doLogin = async () => {
+  const email = document.getElementById('lemail').value.trim();
+  const pass  = document.getElementById('lpass').value;
+  const btn   = document.getElementById('lbtn');
+  const err   = document.getElementById('lerr');
+  if (!email||!pass) { err.textContent='Email आणि password भरा.'; return; }
+  btn.disabled = true; btn.textContent = 'Signing in...'; err.textContent = '';
+  try {
+    await signInWithEmailAndPassword(auth, email, pass);
+  } catch(e) {
+    err.textContent = (e.code==='auth/wrong-password'||e.code==='auth/user-not-found'||e.code==='auth/invalid-credential')
+      ? '❌ Wrong email or password' : '❌ ' + e.message;
+    btn.disabled = false; btn.textContent = '🔓 Login';
+  }
+};
+
+window.doLogout = () => signOut(auth);
+
+// LOAD
+function loadData() {
+  onSnapshot(doc(db, "formsapp", "data"), snap => {
+    if (snap.exists()) {
+      const d = snap.data();
+      document.getElementById('app-title').value = d.title || '';
+      document.getElementById('app-sub').value   = d.subtitle || '';
+      window._forms = (d.forms || []).map((f,i) => ({
+        id: f.id ?? i, icon: f.icon||'📝',
+        name: f.name||'', desc: f.desc||'', url: f.url||''
+      }));
+    } else {
+      window._forms = buildDefault();
+    }
+    renderRows();
+    markClean();
+  });
+}
+
+// SAVE
+window.saveAll = async () => {
+  const btn = document.getElementById('save-btn');
+  btn.disabled = true; btn.textContent = '⏳ Saving...';
+  try {
+    await setDoc(doc(db, "formsapp", "data"), {
+      title:    document.getElementById('app-title').value || 'Forms Portal',
+      subtitle: document.getElementById('app-sub').value || '',
+      forms:    window._forms,
+      updatedAt: new Date().toISOString()
+    });
+    showToast('✅ Saved! Users see updates instantly.', '#20c997');
+    markClean();
+  } catch(e) {
+    showToast('❌ Error: ' + e.message, '#ff4d6d');
+  }
+  btn.disabled = false; btn.textContent = '💾 Save All';
+};
+</script>
+
+<script>
+const ICONS = ['📝','📋','📊','🗂️','📁','✍️','📌','🔖','⭐','🎯','📎','🧾','📓','📒','📔','📕','📗','📘','📙','📃','📄','📑','🗃️','💼','🔑','🏷️','👥','🌐','📡','⚙️','🔬','🎓','🚀','💡','🏅','🔧','📬','📤','🎲','🌟'];
+
+window._forms = [];
+let _dirty = false;
+let _iconTarget = null;
+
+function buildDefault() {
+  return Array.from({length:25},(_,i)=>({
+    id:i+1, icon:'📝', name:`Form ${i+1}`, desc:'', url:''
+  }));
+}
+
+function renderRows() {
+  const w = document.getElementById('rows-wrap');
+  w.innerHTML = '';
+  const linked = window._forms.filter(f=>f.url).length;
+  document.getElementById('st-total').textContent  = window._forms.length;
+  document.getElementById('st-linked').textContent = linked;
+  document.getElementById('st-empty').textContent  = window._forms.length - linked;
+
+  window._forms.forEach((f, i) => {
+    const row = document.createElement('div');
+    row.className = 'form-row';
+    row.style.animationDelay = (i*0.02)+'s';
+    const hasUrl = f.url && f.url.trim();
+    row.innerHTML = `
+      <div class="row-num">${String(i+1).padStart(2,'0')}</div>
+
+      <div class="row-name-col">
+        <span class="row-label">ICON &amp; NAME</span>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <div class="row-icon-pick" onclick="pickIcon(${i},this)">${f.icon||'📝'}</div>
+          <input class="row-input" placeholder="Form name..." value="${esc(f.name)}"
+            oninput="update(${i},'name',this.value)" style="flex:1;">
+        </div>
+      </div>
+
+      <div class="row-name-col">
+        <span class="row-label">GOOGLE FORM URL &amp; DESCRIPTION</span>
+        <input class="row-input url-inp" placeholder="https://docs.google.com/forms/d/.../viewform"
+          value="${esc(f.url)}" oninput="update(${i},'url',this.value)">
+        <input class="row-input" placeholder="Short description (optional)" value="${esc(f.desc)}"
+          oninput="update(${i},'desc',this.value)" style="margin-top:5px;font-size:12px;">
+      </div>
+
+      <div class="row-status">
+        <span class="status-dot"></span>
+        <span class="status-label ${hasUrl?'s-ok':'s-warn'}">${hasUrl?'✓ Linked':'No Link'}</span>
+      </div>
+
+      <div class="row-actions">
+        <button class="row-btn" onclick="testForm(${i})" title="Test form">▶</button>
+        <button class="row-btn del" onclick="deleteRow(${i})" title="Delete">🗑</button>
+      </div>`;
+    w.appendChild(row);
+  });
+}
+
+function update(i, key, val) {
+  window._forms[i][key] = val;
+  dirtify();
+  // refresh status dot instantly
+  const rows = document.querySelectorAll('.form-row');
+  if (rows[i]) {
+    const hasUrl = window._forms[i].url.trim();
+    const dot  = rows[i].querySelector('.status-dot');
+    const lbl  = rows[i].querySelector('.status-label');
+    if (dot && lbl) {
+      lbl.className = 'status-label ' + (hasUrl?'s-ok':'s-warn');
+      lbl.textContent = hasUrl ? '✓ Linked' : 'No Link';
+    }
+  }
+  // update stats
+  const linked = window._forms.filter(f=>f.url).length;
+  document.getElementById('st-linked').textContent = linked;
+  document.getElementById('st-empty').textContent  = window._forms.length - linked;
+}
+
+function addForm() {
+  const id = Date.now();
+  window._forms.push({id, icon:'📝', name:`Form ${window._forms.length+1}`, desc:'', url:''});
+  renderRows();
+  dirtify();
+  document.getElementById('rows-wrap').lastElementChild?.scrollIntoView({behavior:'smooth'});
+}
+
+function deleteRow(i) {
+  if (!confirm('Delete this form?')) return;
+  window._forms.splice(i, 1);
+  renderRows(); dirtify();
+}
+
+function resetAll() {
+  if (!confirm('Reset ALL forms to default 25? This will clear all links!')) return;
+  window._forms = buildDefault();
+  renderRows(); dirtify();
+  showToast('🔄 Reset to default 25 forms');
+}
+
+function testForm(i) {
+  const u = window._forms[i].url;
+  if (!u) { showToast('⚠ No URL set for this form', '#ffa94d'); return; }
+  window.open(u, '_blank');
+}
+
+// ICON PICKER
+function pickIcon(idx, el) {
+  _iconTarget = {idx, el};
+  const pop = document.getElementById('icon-pop');
+  const grid = document.getElementById('icon-pop-grid');
+  grid.innerHTML = '';
+  ICONS.forEach(ic => {
+    const d = document.createElement('div');
+    d.className = 'ip-opt';
+    d.textContent = ic;
+    d.onclick = () => {
+      window._forms[idx].icon = ic;
+      el.textContent = ic;
+      dirtify();
+      pop.classList.remove('show');
+    };
+    grid.appendChild(d);
+  });
+  const rect = el.getBoundingClientRect();
+  pop.style.top  = (rect.bottom + 8 + window.scrollY) + 'px';
+  pop.style.left = Math.min(rect.left, window.innerWidth - 295) + 'px';
+  pop.classList.add('show');
+}
+
+document.addEventListener('click', e => {
+  const pop = document.getElementById('icon-pop');
+  if (pop.classList.contains('show') && !pop.contains(e.target) && !e.target.classList.contains('row-icon-pick')) {
+    pop.classList.remove('show');
+  }
+});
+
+// DIRTY STATE
+function dirtify() {
+  _dirty = true;
+  document.getElementById('dirty-note').textContent = '⚠ Unsaved changes';
+  document.getElementById('dirty-note').style.color = 'var(--warn)';
+}
+function markClean() {
+  _dirty = false;
+  document.getElementById('dirty-note').textContent = 'All changes saved ✓';
+  document.getElementById('dirty-note').style.color = 'var(--t3)';
+}
+
+// TOAST
+function showToast(msg, color) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.borderLeftColor = color || 'var(--bd2)';
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+window.addEventListener('beforeunload', e => {
+  if (_dirty) { e.preventDefault(); e.returnValue=''; }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Forms Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#f4f6fb; --surface:#fff; --surface2:#f0f2f9;
+  --border:#e3e7f3; --accent:#3b5bdb; --accent2:#7048e8;
+  --alight:rgba(59,91,219,0.08); --text:#1a1d2e;
+  --text2:#6b7280; --text3:#adb5bd;
+  --shadow:0 2px 8px rgba(0,0,0,0.07);
+  --shadow2:0 8px 32px rgba(0,0,0,0.13);
+  --r:14px; --font:'Plus Jakarta Sans',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;}
+
+/* HERO */
+.hero{
+  background:linear-gradient(135deg,#3b5bdb,#7048e8);
+  padding:48px 24px 72px; text-align:center;
+  position:relative; overflow:hidden;
+}
+.hero::before{
+  content:''; position:absolute; inset:0;
+  background:radial-gradient(ellipse at 80% 50%,rgba(255,255,255,0.06),transparent 60%);
+}
+.hero-tag{
+  display:inline-flex; align-items:center; gap:6px;
+  background:rgba(255,255,255,0.18); border:1px solid rgba(255,255,255,0.28);
+  border-radius:20px; padding:4px 14px; font-size:12px;
+  color:rgba(255,255,255,0.92); margin-bottom:16px;
+  letter-spacing:0.5px; position:relative;
+}
+.hero h1{
+  font-size:clamp(22px,5vw,38px); font-weight:700;
+  color:#fff; letter-spacing:-0.5px; margin-bottom:8px; position:relative;
+}
+.hero p{font-size:15px;color:rgba(255,255,255,0.72);position:relative;}
+
+/* SEARCH FLOAT */
+.search-float{
+  max-width:460px; margin:-28px auto 0;
+  padding:0 20px; position:relative; z-index:10;
+}
+.search-inner{
+  display:flex; align-items:center;
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:12px; box-shadow:var(--shadow2); overflow:hidden;
+}
+.search-inner input{
+  flex:1; border:none; background:transparent;
+  padding:14px 14px 14px 44px; font-family:var(--font);
+  font-size:14px; color:var(--text); outline:none;
+}
+.search-inner input::placeholder{color:var(--text3);}
+.s-icon{position:absolute;left:36px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:15px;pointer-events:none;}
+
+/* MAIN */
+.wrap{max-width:1180px;margin:0 auto;padding:36px 20px 80px;}
+.section-row{
+  display:flex; align-items:center;
+  justify-content:space-between; margin-bottom:18px;
+}
+.section-label{
+  font-size:13px; font-weight:600; color:var(--text2);
+  text-transform:uppercase; letter-spacing:1px;
+}
+.count-pill{
+  font-size:12px; background:var(--alight);
+  color:var(--accent); border:1px solid rgba(59,91,219,0.2);
+  border-radius:20px; padding:3px 10px; font-weight:600;
+}
+
+/* GRID */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px;}
+
+/* CARD */
+.card{
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--r); padding:22px; cursor:pointer;
+  transition:all 0.22s cubic-bezier(.4,0,.2,1);
+  box-shadow:var(--shadow); opacity:0;
+  animation:cin 0.38s ease forwards; position:relative; overflow:hidden;
+}
+.card::after{
+  content:''; position:absolute; bottom:0; left:0; right:0;
+  height:3px; background:linear-gradient(90deg,var(--accent),var(--accent2));
+  opacity:0; transition:opacity 0.22s;
+}
+.card:hover{transform:translateY(-4px);box-shadow:var(--shadow2);border-color:rgba(59,91,219,0.25);}
+.card:hover::after{opacity:1;}
+@keyframes cin{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+.card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.card-icon{
+  width:46px; height:46px; border-radius:12px;
+  background:var(--alight); display:flex;
+  align-items:center; justify-content:center; font-size:22px;
+}
+.card-no{
+  font-size:11px; font-weight:600; color:var(--text3);
+  background:var(--surface2); padding:4px 8px; border-radius:6px; letter-spacing:1px;
+}
+.card-title{font-size:15px;font-weight:600;margin-bottom:5px;line-height:1.4;}
+.card-desc{font-size:12px;color:var(--text2);margin-bottom:18px;line-height:1.5;min-height:18px;}
+.open-btn{
+  width:100%; padding:10px; background:var(--accent);
+  color:#fff; border:none; border-radius:9px;
+  font-family:var(--font); font-size:13px; font-weight:600;
+  cursor:pointer; transition:all 0.18s;
+  display:flex; align-items:center; justify-content:center; gap:6px;
+}
+.open-btn:hover{background:#2f4ac4;transform:scale(1.02);}
+.open-btn:active{transform:scale(0.98);}
+
+/* STATES */
+.state{text-align:center;padding:70px 20px;color:var(--text2);}
+.spinner{
+  width:36px; height:36px; border:3px solid var(--border);
+  border-top-color:var(--accent); border-radius:50%;
+  animation:spin .8s linear infinite; margin:0 auto 14px;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.big-e{font-size:44px;margin-bottom:12px;display:block;}
+
+/* MODAL */
+.modal-bg{
+  position:fixed; inset:0; background:rgba(15,17,23,0.75);
+  backdrop-filter:blur(6px); z-index:500;
+  display:none; align-items:center; justify-content:center; padding:16px;
+}
+.modal-bg.show{display:flex;}
+.modal{
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:18px; width:100%; max-width:820px; height:88vh;
+  display:flex; flex-direction:column; overflow:hidden;
+  box-shadow:0 24px 80px rgba(0,0,0,0.25);
+  animation:mIn .28s cubic-bezier(.4,0,.2,1);
+}
+@keyframes mIn{from{opacity:0;transform:scale(0.95) translateY(10px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.modal-head{
+  padding:15px 20px; border-bottom:1px solid var(--border);
+  display:flex; align-items:center; gap:12px; flex-shrink:0;
+}
+.mh-icon{
+  width:38px; height:38px; border-radius:10px;
+  background:var(--alight); display:flex;
+  align-items:center; justify-content:center; font-size:18px; flex-shrink:0;
+}
+.mh-info{flex:1;min-width:0;}
+.mh-title{font-size:14px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.mh-sub{font-size:11px;color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:2px;}
+.icon-btn{
+  width:34px; height:34px; background:var(--surface2);
+  border:1px solid var(--border); border-radius:8px;
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; font-size:15px; color:var(--text2);
+  transition:all .15s; flex-shrink:0; font-family:var(--font);
+}
+.icon-btn:hover{background:var(--border);color:var(--text);}
+.iframe-wrap{flex:1;position:relative;overflow:hidden;}
+.iframe-loader{
+  position:absolute; inset:0; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; gap:12px;
+  background:var(--surface); font-size:13px; color:var(--text2);
+  z-index:2; transition:opacity .3s;
+}
+.iframe-wrap iframe{width:100%;height:100%;border:none;position:relative;z-index:1;}
+
+footer{
+  text-align:center; padding:18px; font-size:12px;
+  color:var(--text3); border-top:1px solid var(--border);
+}
+footer a{color:var(--accent);text-decoration:none;}
+
+@media(max-width:600px){
+  .hero{padding:36px 16px 60px;}
+  .grid{grid-template-columns:1fr 1fr; gap:10px;}
+  .card{padding:14px;}
+  .card-icon{width:38px;height:38px;font-size:18px;}
+}
+</style>
+</head>
+<body>
+
+<section class="hero">
+  <div class="hero-tag">📋 Forms Portal</div>
+  <h1 id="app-title">Loading...</h1>
+  <p id="app-sub"></p>
+</section>
+
+<div class="search-float">
+  <div class="search-inner">
+    <span class="s-icon">🔍</span>
+    <input type="text" id="srch" placeholder="फॉर्म शोधा..." oninput="doFilter()" autocomplete="off">
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="section-row">
+    <span class="section-label">Available Forms</span>
+    <span class="count-pill" id="cnt"></span>
+  </div>
+  <div id="container">
+    <div class="state"><div class="spinner"></div><div>Loading forms...</div></div>
+  </div>
+</div>
+
+<footer>Forms Portal &nbsp;·&nbsp; <a href="admin.html">Admin Login</a></footer>
+
+<!-- MODAL -->
+<div class="modal-bg" id="modal" onclick="closeMod(event)">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="mh-icon" id="mi">📝</div>
+      <div class="mh-info">
+        <div class="mh-title" id="mt"></div>
+        <div class="mh-sub" id="ms"></div>
+      </div>
+      <button class="icon-btn" onclick="openExt()" title="New Tab">↗</button>
+      <button class="icon-btn" onclick="closeMod()" style="font-size:18px;">✕</button>
+    </div>
+    <div class="iframe-wrap">
+      <div class="iframe-loader" id="ml">
+        <div class="spinner"></div>
+        <span>Form लोड होत आहे...</span>
+      </div>
+      <iframe id="mf" src="about:blank" onload="frameOk()"></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- Firebase SDK -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+// ╔══════════════════════════════════════════════╗
+// ║  🔥 STEP 3: खाली Firebase config paste करा  ║
+// ╚══════════════════════════════════════════════╝
+const firebaseConfig = {
+  apiKey: "AIzaSyD8YC_R48xdtZe0ycrWISRSh-Rn_7kNv7E",
+  authDomain: "icds-efeba.firebaseapp.com",
+  projectId: "icds-efeba",
+  storageBucket: "icds-efeba.firebasestorage.app",
+  messagingSenderId: "404150914787",
+  appId: "1:404150914787:web:47d6e5376f6928b7c37fd6"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// Live real-time sync
+onSnapshot(doc(db, "formsapp", "data"), snap => {
+  if (snap.exists()) {
+    const d = snap.data();
+    document.getElementById('app-title').textContent = d.title || 'Forms Portal';
+    document.getElementById('app-sub').textContent = d.subtitle || '';
+    window._forms = d.forms || [];
+    doFilter();
+  } else {
+    showState('📭', 'Admin ने अजून forms add केले नाहीत.');
+  }
+}, () => showState('⚠️', 'Connection error. Refresh करा.'));
+</script>
+
+<script>
+window._forms = [];
+let curUrl = '';
+
+function doFilter() {
+  const q = document.getElementById('srch').value.toLowerCase();
+  const list = q ? window._forms.filter(f => (f.name||'').toLowerCase().includes(q) || (f.desc||'').toLowerCase().includes(q)) : window._forms;
+  renderCards(list);
+}
+
+function renderCards(list) {
+  const c = document.getElementById('container');
+  document.getElementById('cnt').textContent = list.length + ' forms';
+  if (!list.length) { showState('🔍','No forms found'); return; }
+  c.innerHTML = '';
+  const g = document.createElement('div');
+  g.className = 'grid';
+  list.forEach((f, i) => {
+    const d = document.createElement('div');
+    d.className = 'card';
+    d.style.animationDelay = (i * 0.035) + 's';
+    d.innerHTML = `
+      <div class="card-top">
+        <div class="card-icon">${f.icon||'📝'}</div>
+        <span class="card-no">#${String(i+1).padStart(2,'0')}</span>
+      </div>
+      <div class="card-title">${x(f.name||'Untitled')}</div>
+      <div class="card-desc">${x(f.desc||'')}</div>
+      <button class="open-btn" onclick='openForm(${JSON.stringify(f).replace(/'/g,"&#39;")})'>📂 फॉर्म उघडा</button>`;
+    g.appendChild(d);
+  });
+  c.appendChild(g);
+}
+
+function openForm(f) {
+  if (!f.url) { alert('या form ला link नाही.'); return; }
+  curUrl = f.url;
+  document.getElementById('mi').textContent = f.icon||'📝';
+  document.getElementById('mt').textContent = f.name;
+  document.getElementById('ms').textContent = f.url;
+  document.getElementById('ml').style.cssText = 'opacity:1;pointer-events:auto;';
+  let u = f.url;
+  if (u.includes('docs.google.com/forms')) u = u.replace(/\/(viewform|edit)[^]*/, '') + '/viewform?embedded=true';
+  document.getElementById('mf').src = u;
+  document.getElementById('modal').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+function frameOk() {
+  const l = document.getElementById('ml');
+  l.style.opacity = '0';
+  setTimeout(() => l.style.pointerEvents = 'none', 300);
+}
+function openExt() { if (curUrl) window.open(curUrl,'_blank'); }
+function closeMod(e) {
+  if (e && e.target !== document.getElementById('modal')) return;
+  document.getElementById('modal').classList.remove('show');
+  document.getElementById('mf').src = 'about:blank';
+  document.body.style.overflow = '';
+}
+function showState(em, msg) {
+  document.getElementById('container').innerHTML =
+    `<div class="state"><span class="big-e">${em}</span><div>${msg}</div></div>`;
+}
+function x(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+document.addEventListener('keydown', e => { if(e.key==='Escape') closeMod(); });
+</script>
+</body>
+</html>
